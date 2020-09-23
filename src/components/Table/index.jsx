@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 
 import './style.scss'
 
-const Table = ({ productsProp = [] }) => {
+const Table = ({ productsProp = [], openModal }) => {
 	const [sort, setSort] = useState([
 		{ sort: 'increase', name: 'price' },
 		{ sort: 'increase', name: 'name' },
@@ -46,6 +46,10 @@ const Table = ({ productsProp = [] }) => {
 			}
 			setProducts(sortedProducts)
 		})
+	}
+
+	const onDelete = (product) => {
+		openModal('delete', product)
 	}
 
 	return (
@@ -109,7 +113,7 @@ const Table = ({ productsProp = [] }) => {
 							<td className='tableBody__cell'>{formattedPrice}</td>
 							<td className='tableBody__cell'>
 								<button>Edit</button>
-								<button>Delete</button>
+								<button onClick={() => onDelete(item)}>Delete</button>
 							</td>
 						</tr>
 					)

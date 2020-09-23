@@ -1,0 +1,12 @@
+.topPanel {
+    width: 100%;
+    margin-bottom: 1rem;
+    &__search {
+        width: 25%;
+        min-width: 30rem;
+    }
+
+    &__right {
+        float: right;
+    }
+}

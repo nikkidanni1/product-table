@@ -16,10 +16,16 @@ function reducer(state, action) {
 		case TYPES.EDIT_PRODUCT:
 			return { ...state }
 		case TYPES.DELETE_PRODUCT:
-			return { ...state }
+			const index = state.products.findIndex((item) => item.id === action.payload)
+			const products = [...state.products.slice(0, index), ...state.products.slice(index + 1, state.products.lenght)]
+			return { ...state, products }
 		default:
 			return state
 	}
+}
+
+export const deleteProduct = (payload) => {
+	return { type: TYPES.DELETE_PRODUCT, payload }
 }
 
 const configureStore = () => {
