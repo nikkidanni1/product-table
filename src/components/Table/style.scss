@@ -1,0 +1,43 @@
+.table {
+	width: 100%;
+	border-collapse: collapse;
+	font-size: 1.5rem;
+}
+
+.tableHeader {
+	&__cell {
+		position: relative;
+		border: 0.2rem solid #444;
+	}
+
+	&__cellSort {
+		position: absolute;
+		top: calc(50% - 0.75rem);
+		right: 10%;
+		width: 1.5rem;
+		cursor: pointer;
+		&_decrease {
+			transform: rotate(180deg);
+		}
+	}
+}
+
+.tableBody {
+	&__cell {
+		position: relative;
+        padding: 0 1rem;
+        border: 0.2rem solid #444;
+	}
+
+	&__cellCount {
+		position: absolute;
+		top: calc(50% - 0.8rem);
+		right: 10%;
+		display: block;
+		padding: 0 0.5rem;
+		font-size: 1.2rem;
+		color: #fff;
+		border-radius: 100%;
+		background: #444;
+	}
+}

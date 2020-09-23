@@ -1,0 +1,27 @@
+[{
+    "id": 1,
+    "name": "product 1",
+    "email": "product_1@mail.ru",
+    "count": 5,
+    "price": 1000,
+    "country": "Russia",
+    "city": "Saratov"
+},
+{
+    "id": 2,
+    "name": "product 2",
+    "email": "product_2@mail.ru",
+    "count": 4,
+    "price": 2000000,
+    "country": "",
+    "city": ""
+},
+{
+    "id": 3,
+    "name": "product 3",
+    "email": "product_3@mail.ru",
+    "count": 3,
+    "price": 30000.77,
+    "country": "USA",
+    "city": "Washington"
+}]
