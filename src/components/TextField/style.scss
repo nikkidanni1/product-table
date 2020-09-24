@@ -1,0 +1,23 @@
+.textField {
+    width: 70%;
+    margin: 0 auto 2rem;
+    &__label {
+        display: block;
+        margin-bottom: 1rem;
+    }
+
+    &__input {
+        display: block;
+        width: 100%;
+        &.error {
+            border-color: #a33;
+        }
+    }
+
+    &__error {
+        display: block;
+        padding: 0.5rem 0;
+        font-size: 1.25rem;
+        color: #a33;
+    }
+}

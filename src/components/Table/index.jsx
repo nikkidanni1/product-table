@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-
+import { formatPrice } from 'utils' 
 import './style.scss'
 
 const Table = ({ productsProp = [], openModal }) => {
@@ -95,15 +95,7 @@ const Table = ({ productsProp = [], openModal }) => {
 			</thead>
 			<tbody>
 				{products.map((item) => {
-					const [integer, fractional] = item.price.toString().split('.')
-					const formattedPrice = `$${integer
-						.split('')
-						.reverse()
-						.join('')
-						.replace(/([0-9]{3}(?=[0-9]))/g, '$1,')
-						.split('')
-                        .reverse()
-						.join('')}${fractional !== undefined ? `.${fractional}` : ''}`
+					const formattedPrice = formatPrice(item.price)
 					return (
 						<tr key={item.id}>
 							<td className='tableBody__cell'>
