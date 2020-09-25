@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import './style.scss'
 
-const TextField = ({ type, label, value, onChange, error, formattedFunc }) => {
+const TextField = ({ type, label, value, onChange, error, formattedFunc, atteptAccept }) => {
 	const [touched, setTouched] = useState(false)
 	const [inFocus, setInFocus] = useState(false)
 
@@ -10,7 +10,7 @@ const TextField = ({ type, label, value, onChange, error, formattedFunc }) => {
 			<label className='textField__label' htmlFor={label}>{`${label}:`}</label>
 			<input
 				id={label}
-				className={`textField__input ${(error && touched) ? 'error' : ''}`}
+				className={`textField__input ${(error && (touched || atteptAccept)) ? 'error' : ''}`}
 				type={type}
 				value={(formattedFunc && !inFocus) ? formattedFunc(value) : value}
 				onChange={(e) => onChange(e.target.value)}
@@ -22,7 +22,7 @@ const TextField = ({ type, label, value, onChange, error, formattedFunc }) => {
 					setInFocus(true)
 				}}
 			/>
-			{touched && <span className='textField__error'>{error}</span>}
+			{(error && (touched || atteptAccept)) && <span className='textField__error'>{error}</span>}
 		</fieldset>
 	)
 }

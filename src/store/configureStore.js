@@ -12,7 +12,13 @@ const TYPES = {
 function reducer(state, action) {
 	switch (action.type) {
 		case TYPES.ADD_PRODUCT:
-			return { ...state }
+			return {
+				...state,
+				products: [
+					...state.products, 
+					{ ...action.payload, id: state.products[state.products.length - 1].id + 1, }
+				],
+			}
 		case TYPES.EDIT_PRODUCT:
 			return { ...state }
 		case TYPES.DELETE_PRODUCT:
@@ -28,9 +34,13 @@ export const deleteProduct = (payload) => {
 	return { type: TYPES.DELETE_PRODUCT, payload }
 }
 
+export const addProduct = (payload) => {
+	return { type: TYPES.ADD_PRODUCT, payload }
+}
+
 const configureStore = () => {
-    const store = createStore(reducer, initState)
-    return store
+	const store = createStore(reducer, initState)
+	return store
 }
 
 export default configureStore

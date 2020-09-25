@@ -5,7 +5,7 @@
     "count": 5,
     "price": 1000,
     "country": "Russia",
-    "city": "Saratov"
+    "city": ["Saratov"]
 },
 {
     "id": 2,
@@ -14,7 +14,7 @@
     "count": 4,
     "price": 2000000,
     "country": "",
-    "city": ""
+    "city": []
 },
 {
     "id": 3,
@@ -23,7 +23,7 @@
     "count": 3,
     "price": 30000.77,
     "country": "USA",
-    "city": "Washington"
+    "city": ["Washington"]
 }, {
     "id": 4,
     "name": "product 4",
@@ -31,5 +31,5 @@
     "count": 10,
     "price": 1000,
     "country": "Russia",
-    "city": "Saratov"
+    "city": ["Saratov"]
 }]

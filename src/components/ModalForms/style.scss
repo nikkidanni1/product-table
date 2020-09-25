@@ -1,0 +1,31 @@
+.form {
+    width: 70%;
+    margin: 0 auto;
+    &__item {
+        margin-bottom: 2rem;
+    }
+
+    &__place {
+        width: 15rem;
+        padding: 0.5rem;
+        border: 0.1rem solid #444;
+    }
+
+    &__select {
+        display: block;
+        margin-top: 1rem;
+    }
+
+    &__fieldsetAccent {
+        padding-bottom: 1rem;
+        margin-bottom: 1rem;
+        border-bottom: 0.1rem solid #444;
+    }
+
+    &__selectError {
+        display: block;
+        padding: 1rem 0;
+        font-size: 1.25rem;
+        color: #a33;
+    }
+}
