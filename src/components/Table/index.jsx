@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { formatPrice } from 'utils' 
+import { formatPrice } from 'utils'
 import './style.scss'
 
 const Table = ({ productsProp = [], openModal }) => {
@@ -52,6 +52,14 @@ const Table = ({ productsProp = [], openModal }) => {
 		openModal('delete', product)
 	}
 
+	const onEdit = (product) => {
+		openModal('edit', product)
+	}
+
+	const onView = (product) => {
+		openModal('view', product)
+	}
+
 	return (
 		<table className='table'>
 			<thead>
@@ -99,12 +107,12 @@ const Table = ({ productsProp = [], openModal }) => {
 					return (
 						<tr key={item.id}>
 							<td className='tableBody__cell'>
-								{item.name}
+								<a className='tableBody__a' onClick={() => onView(item)}>{item.name}</a>
 								<span className='tableBody__cellCount'>{item.count}</span>
 							</td>
 							<td className='tableBody__cell'>{formattedPrice}</td>
 							<td className='tableBody__cell'>
-								<button>Edit</button>
+								<button onClick={() => onEdit(item)}>Edit</button>
 								<button onClick={() => onDelete(item)}>Delete</button>
 							</td>
 						</tr>

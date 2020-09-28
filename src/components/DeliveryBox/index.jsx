@@ -4,10 +4,10 @@ import './style.scss'
 
 const deliverySelectList = ['-', 'Country', 'City']
 
-const DeliveryBox = ({ onChange, countriesList, citiesList, atteptAccept }) => {
-	const [delivery, setDelivery] = useState(deliverySelectList[0])
-	const [selectedCountry, setSelectedCountry] = useState(null)
-	const [selectedCity, setSelectedCity] = useState(new Set())
+const DeliveryBox = ({ onChange, countriesList, citiesList, atteptAccept, defaultValues }) => {
+	const [delivery, setDelivery] = useState(defaultValues.city.size === 0 ? deliverySelectList[0] : deliverySelectList[1])
+	const [selectedCountry, setSelectedCountry] = useState(defaultValues.country)
+	const [selectedCity, setSelectedCity] = useState(defaultValues.city)
 	const [error, setError] = useState('')
 	const [isTouchedCities, setTouchedCities] = useState(false)
 

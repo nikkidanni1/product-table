@@ -23,7 +23,7 @@ const TopPanel = ({ search, openModal }) => {
             <button
                 className='topPanel__right'
                 onClick={() => {
-                    openModal('create')
+                    openModal('create', null)
                 }}
 			>
 				Add New

@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { connect } from 'react-redux'
-import { addProduct } from 'store/configureStore'
+import { addProduct, editProduct } from 'store/configureStore'
 
 import ModalBase from 'components/ModalBase'
 import TextField from 'components/TextField'
@@ -16,18 +16,31 @@ const citiesList = [
 	['Tokio', 'Kioto'],
 ]
 
-const ModalForms = ({ close, modalMode, selectedProduct, addProduct }) => {
-	const [name, setName] = useState('')
-	const [email, setEmail] = useState('')
-	const [count, setCount] = useState('0')
-	const [price, setPrice] = useState('0')
-	const [delivery, setDelivery] = useState({
-		country: '',
-		city: '',
-	})
+const ModalForms = ({ close, modalMode, product, addProduct, editProduct }) => {
+	const initDelivery = () => {
+		let res = { country: null, city: new Set() }
+		if (modalMode === 'edit' && product.city.length !== 0) {
+			const country = countriesList.indexOf(product.country)
+			let city = []
+			citiesList[country].forEach((item, index) => {
+				if (product.city.includes(item)) {
+					city.push(index)
+				}
+			})
+			res = { country, city: new Set(city) }
+		}
+		return res
+	}
+
+	const [name, setName] = useState(product ? product.name : '')
+	const [email, setEmail] = useState(product ? product.email : '')
+	const [count, setCount] = useState(product ? product.count : '0')
+	const [price, setPrice] = useState(product ? product.price : '0')
+	const [delivery, setDelivery] = useState(initDelivery())
+
 	const [errors, setErrors] = useState({
-		name: 'Name is required',
-		email: 'Email is required',
+		name: product ? '' : 'Name is required',
+		email: product ? '' : 'Email is required',
 		city: '',
 	})
 	const [atteptAccept, setAtteptAccept] = useState(false)
@@ -103,8 +116,13 @@ const ModalForms = ({ close, modalMode, selectedProduct, addProduct }) => {
 				country: delivery.country !== null ? countriesList[delivery.country] : '',
 				city: [],
 			}
-			data.city = citiesList[delivery.country].filter((item, index) => delivery.city.has(index))
-			addProduct(data)
+			data.city =
+				delivery.country !== null ? citiesList[delivery.country].filter((item, index) => delivery.city.has(index)) : []
+			if (modalMode === 'edit') {
+				editProduct({ ...data, id: product.id })
+			} else {
+				addProduct(data)
+			}
 			close()
 		}
 	}
@@ -140,6 +158,7 @@ const ModalForms = ({ close, modalMode, selectedProduct, addProduct }) => {
 				</li>
 				<li className='form__item'>
 					<DeliveryBox
+						defaultValues={delivery}
 						onChange={onChangedDelivery}
 						countriesList={countriesList}
 						citiesList={citiesList}
@@ -153,7 +172,7 @@ const ModalForms = ({ close, modalMode, selectedProduct, addProduct }) => {
 							onAccept()
 						}}
 					>
-						Add
+						{modalMode === 'edit' ? 'Update' : 'Add'}
 					</button>
 				</li>
 			</ul>
@@ -164,6 +183,7 @@ const ModalForms = ({ close, modalMode, selectedProduct, addProduct }) => {
 const mapDispatchToProps = (dispatch) => {
 	return {
 		addProduct: (payload) => dispatch(addProduct(payload)),
+		editProduct: (payload) => dispatch(editProduct(payload)),
 	}
 }
 

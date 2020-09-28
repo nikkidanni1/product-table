@@ -6,6 +6,7 @@ import Table from 'components/Table'
 import TopPanel from 'components/TopPanel'
 import ModalDelete from 'components/ModalDelete'
 import ModalForms from 'components/ModalForms'
+import ModalView from 'components/ModalView'
 
 import 'App.scss'
 
@@ -39,9 +40,10 @@ function App({ products, deleteProductById }) {
 			<TopPanel search={onSearch} openModal={onOpenModal} />
 			<Table productsProp={products.filter((item) => item.name.includes(searchText))} openModal={onOpenModal} />
 			{(isModalOpen && modalMode === 'delete') && <ModalDelete close={onCloseModal} onDelete={onDelete} />}
-			{isModalOpen && modalMode !== 'delete' && (
+			{isModalOpen && (modalMode === 'create' || modalMode === 'edit') && (
 				<ModalForms close={onCloseModal} modalMode={modalMode} product={selectedProduct} />
 			)}
+			{(isModalOpen && modalMode === 'view') && <ModalView close={onCloseModal} product={selectedProduct} />}
 		</div>
 	)
 }
