@@ -1,0 +1,24 @@
+.tableBody {
+	&__cell {
+		position: relative;
+        padding: 0 1rem;
+        border: 0.2rem solid #444;
+	}
+
+	&__cellCount {
+		position: absolute;
+		top: calc(50% - 0.8rem);
+		right: 10%;
+		display: block;
+		padding: 0 0.5rem;
+		font-size: 1.2rem;
+		color: #fff;
+		border-radius: 100%;
+		background: #444;
+	}
+
+	&__a {
+		color: #00ff;
+		cursor: pointer;
+	}
+}

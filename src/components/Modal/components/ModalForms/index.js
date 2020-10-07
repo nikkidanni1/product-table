@@ -1,8 +1,7 @@
-import React, { useState } from 'react'
-import { connect } from 'react-redux'
-import { addProduct, editProduct } from 'store/configureStore'
+import React, { useState, useCallback } from 'react'
 
-import ModalBase from 'components/ModalBase'
+import { validation } from './utils'
+
 import TextField from 'components/TextField'
 import DeliveryBox from 'components/DeliveryBox'
 import { formatPrice } from 'utils'
@@ -16,10 +15,17 @@ const citiesList = [
 	['Tokio', 'Kioto'],
 ]
 
-const ModalForms = ({ close, modalMode, product, addProduct, editProduct }) => {
-	const initDelivery = () => {
+const schemes = {
+	name: { minLength: 1, maxLength: 15, pattern: '[^\\s]{1,}' },
+	email: { minLength: 1, pattern: '\\S+@\\S+\\.\\S+' },
+	count: { type: 'integer', minimum: 0 },
+	price: { type: 'number', minimum: 0 },
+}
+
+const ModalForms = ({ product, addProduct, editProduct }) => {
+	const initDelivery = useCallback(() => {
 		let res = { country: null, city: new Set() }
-		if (modalMode === 'edit' && product.city.length !== 0) {
+		if (product !== null && product.city.length !== 0) {
 			const country = countriesList.indexOf(product.country)
 			let city = []
 			citiesList[country].forEach((item, index) => {
@@ -30,75 +36,59 @@ const ModalForms = ({ close, modalMode, product, addProduct, editProduct }) => {
 			res = { country, city: new Set(city) }
 		}
 		return res
-	}
+	}, [])
 
 	const [name, setName] = useState(product ? product.name : '')
 	const [email, setEmail] = useState(product ? product.email : '')
 	const [count, setCount] = useState(product ? product.count : '0')
 	const [price, setPrice] = useState(product ? product.price : '0')
 	const [delivery, setDelivery] = useState(initDelivery())
-
 	const [errors, setErrors] = useState({
 		name: product ? '' : 'Name is required',
 		email: product ? '' : 'Email is required',
+		count: '',
+		price: '',
 		city: '',
 	})
 	const [atteptAccept, setAtteptAccept] = useState(false)
 
-	const onChangeName = (value) => {
-		const length = value.length
-		if (length < 16) {
-			if (length > 0 && /[^\s]{1,}/g.exec(value) === null) {
-				setErrors({ ...errors, name: 'Field Name is invalid' })
-			} else if (length === 0) {
-				setErrors({ ...errors, name: 'Name is required' })
-			} else {
-				setErrors({ ...errors, name: '' })
-			}
-			setName(value)
-		}
-	}
+	const onChangeTextfield = useCallback((e, field, setState) => {
+		const value = e.target.value
+		const error = validation(schemes[field], value)
+		setErrors({ ...errors, [field]: error === 'No errors' ? '' : error })
+		setState(value)
+	}, [errors])
 
-	const onChangeEmail = (value) => {
-		const length = value.length
-		if (length > 0 && /\S+@\S+\.\S+/.exec(value) === null) {
-			setErrors({ ...errors, email: 'Field Email is invalid' })
-		} else if (length === 0) {
-			setErrors({ ...errors, email: 'Email is required' })
-		} else {
-			setErrors({ ...errors, email: '' })
-		}
+	const onChangeName = useCallback((e) => {
+		onChangeTextfield(e, 'name', setName)
+	}, [])
 
-		setEmail(value)
-	}
+	const onChangeEmail = useCallback((e) => {
+		onChangeTextfield(e, 'email', setEmail)
+	}, [])
 
-	const onChangeCount = (value) => {
-		const res = +value.replace(/[^0-9]/g, '')
-		setCount(res.toString())
-	}
+	const onChangeCount = useCallback((e) => {
+		onChangeTextfield(e, 'count', setCount)
+	}, [])
 
-	const onChangePrice = (value) => {
-		const num = +value.replace(/[^0-9.]/g, '')
+	const onChangePrice = useCallback((e) => {
+		onChangeTextfield(e, 'price', setPrice)
+	}, [])
 
-		let res = num.toString()
-		if (value[value.length - 1] === '.') {
-			res += '.'
-		}
+	const onChangedDelivery = useCallback(
+		(obj) => {
+			setDelivery({
+				country: obj.country,
+				city: obj.city,
+			})
+			setErrors({ ...errors, city: obj.error })
+		},
+		[errors]
+	)
 
-		if (/[0-9]+(?:(?=\.)\.[0-9]*|)/g.exec(res) !== null) {
-			setPrice(res)
-		}
-	}
+	const onAccept = useCallback(() => {
+		setAtteptAccept(true)
 
-	const onChangedDelivery = (obj) => {
-		setDelivery({
-			country: obj.country,
-			city: obj.city,
-		})
-		setErrors({ ...errors, city: obj.error })
-	}
-
-	const onAccept = () => {
 		let hasError = false
 		for (const key in errors) {
 			if (errors[key] !== '') {
@@ -118,17 +108,16 @@ const ModalForms = ({ close, modalMode, product, addProduct, editProduct }) => {
 			}
 			data.city =
 				delivery.country !== null ? citiesList[delivery.country].filter((item, index) => delivery.city.has(index)) : []
-			if (modalMode === 'edit') {
+			if (product !== null) {
 				editProduct({ ...data, id: product.id })
 			} else {
 				addProduct(data)
 			}
-			close()
 		}
-	}
-
+	}, [errors, name, email, count, price, delivery])
+	
 	return (
-		<ModalBase size='l' close={close}>
+		<>
 			<ul className='form'>
 				<li className='form__item'>
 					<TextField
@@ -151,10 +140,25 @@ const ModalForms = ({ close, modalMode, product, addProduct, editProduct }) => {
 					/>
 				</li>
 				<li className='form__item'>
-					<TextField type='number' label='Count' value={count} onChange={onChangeCount} />
+					<TextField
+						type='number'
+						label='Count'
+						value={count}
+						onChange={onChangeCount}
+						error={errors.count}
+						atteptAccept={atteptAccept}
+					/>
 				</li>
 				<li className='form__item'>
-					<TextField type='text' label='Price' value={price} onChange={onChangePrice} formattedFunc={formatPrice} />
+					<TextField
+						type='text'
+						label='Price'
+						value={price}
+						onChange={onChangePrice}
+						error={errors.price}
+						atteptAccept={atteptAccept}
+						formattedFunc={formatPrice}
+					/>
 				</li>
 				<li className='form__item'>
 					<DeliveryBox
@@ -166,25 +170,11 @@ const ModalForms = ({ close, modalMode, product, addProduct, editProduct }) => {
 					/>
 				</li>
 				<li>
-					<button
-						onClick={() => {
-							setAtteptAccept(true)
-							onAccept()
-						}}
-					>
-						{modalMode === 'edit' ? 'Update' : 'Add'}
-					</button>
+					<button onClick={onAccept}>{product !== null ? 'Update' : 'Add'}</button>
 				</li>
 			</ul>
-		</ModalBase>
+		</>
 	)
 }
 
-const mapDispatchToProps = (dispatch) => {
-	return {
-		addProduct: (payload) => dispatch(addProduct(payload)),
-		editProduct: (payload) => dispatch(editProduct(payload)),
-	}
-}
-
-export default connect(null, mapDispatchToProps)(ModalForms)
+export default React.memo(ModalForms)

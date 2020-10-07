@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useCallback } from 'react'
 
 import './style.scss'
 
@@ -11,7 +11,7 @@ const DeliveryBox = ({ onChange, countriesList, citiesList, atteptAccept, defaul
 	const [error, setError] = useState('')
 	const [isTouchedCities, setTouchedCities] = useState(false)
 
-	const onChangeDelivery = (e) => {
+	const onChangeDelivery = useCallback((e) => {
 		const value = e.target.value
 		let newCountry = selectedCountry
 		let newCity = selectedCity
@@ -38,9 +38,9 @@ const DeliveryBox = ({ onChange, countriesList, citiesList, atteptAccept, defaul
 		setError(newError)
 
 		onChange({ country: newCountry, city: newCity, error: newError })
-	}
+	}, [selectedCountry, selectedCity, error, onChange])
 
-	const onChangeCountry = (index) => {
+	const onChangeCountry = useCallback((index) => {
 		let newCountry = index
 		let newCity = new Set()
 		let newError = 'Check city'
@@ -50,9 +50,9 @@ const DeliveryBox = ({ onChange, countriesList, citiesList, atteptAccept, defaul
 		setError(newError)
 
 		onChange({ country: newCountry, city: newCity, error: newError })
-	}
+	}, [onChange])
 
-	const onChangeAllCities = (e) => {
+	const onChangeAllCities = useCallback((e) => {
 		const target = e.target
 		let newCity = selectedCity
 		let newError = error
@@ -73,9 +73,9 @@ const DeliveryBox = ({ onChange, countriesList, citiesList, atteptAccept, defaul
 		cityOut.delete(+target.value)
 
 		onChange({ country: selectedCountry, city: cityOut, error: newError })
-	}
+	}, [selectedCity, error, onChange])
 
-	const onChangeCities = (e, index) => {
+	const onChangeCities = useCallback((e, index) => {
 		const checked = e.target.checked
 		const newCity = new Set([...selectedCity])
 		let newError = error
@@ -98,8 +98,8 @@ const DeliveryBox = ({ onChange, countriesList, citiesList, atteptAccept, defaul
 		setTouchedCities(true)
 
 		onChange({ country: selectedCountry, city: newCity, error: newError })
-	}
-
+	}, [onChange, selectedCity, error])
+	
 	return (
 		<div className='deliveryBox'>
 			<div>

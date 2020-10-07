@@ -1,63 +1,45 @@
-import React, { useState } from 'react'
-import { connect } from 'react-redux'
-import { deleteProduct } from 'store/configureStore'
+import React, { useState, useCallback } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+
+import { changeMode } from 'store/modal/actions'
 
 import Table from 'components/Table'
 import TopPanel from 'components/TopPanel'
-import ModalDelete from 'components/ModalDelete'
-import ModalForms from 'components/ModalForms'
-import ModalView from 'components/ModalView'
+import Modal from 'components/Modal'
 
 import 'App.scss'
 
-function App({ products, deleteProductById }) {
+function App() {
 	const [searchText, setSearchText] = useState('')
 	const [isModalOpen, toggleModal] = useState(false)
-	const [modalMode, setModalMode] = useState('')
 	const [selectedProduct, setSelectedProduct] = useState(null)
 
-	const onSearch = (text) => {
+	const dispatch = useDispatch()
+
+	const products = useSelector((state) => state.products)
+	const filtredProducts = products.filter((item) => item.name.includes(searchText))
+
+	const onSearch = useCallback((text) => {
 		setSearchText(text)
-	}
+	}, [])
 
-	const onOpenModal = (type, product) => {
-		toggleModal((prev) => !prev)
-		setModalMode(type)
+	const onOpenModal = useCallback((type, product) => {
+		toggleModal(true)
+		dispatch(changeMode(type))
 		setSelectedProduct(product)
-	}
+	}, [])
 
-	const onCloseModal = () => {
+	const onCloseModal = useCallback(() => {
 		toggleModal(false)
-	}
-
-	const onDelete = () => {
-		deleteProductById(selectedProduct.id)
-		onCloseModal()
-	}
+	}, [])
 
 	return (
 		<div className='app'>
 			<TopPanel search={onSearch} openModal={onOpenModal} />
-			<Table productsProp={products.filter((item) => item.name.includes(searchText))} openModal={onOpenModal} />
-			{(isModalOpen && modalMode === 'delete') && <ModalDelete close={onCloseModal} onDelete={onDelete} />}
-			{isModalOpen && (modalMode === 'create' || modalMode === 'edit') && (
-				<ModalForms close={onCloseModal} modalMode={modalMode} product={selectedProduct} />
-			)}
-			{(isModalOpen && modalMode === 'view') && <ModalView close={onCloseModal} product={selectedProduct} />}
+			<Table productsProp={filtredProducts} openModal={onOpenModal} />
+			{isModalOpen && <Modal close={onCloseModal} product={selectedProduct} />}
 		</div>
 	)
 }
 
-const mapStateToProps = (state) => {
-	return {
-		products: state.products,
-	}
-}
-
-const mapDispatchToProps = (dispatch) => {
-	return {
-		deleteProductById: (id) => dispatch(deleteProduct(id)),
-	}
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(App)
+export default App
