@@ -1,4 +1,6 @@
 import React from 'react'
+import PropTypes from 'prop-types'
+
 import './style.scss'
 
 const TableBase = ({ children, sort, onSortByName, onSortByPrice }) => {
@@ -39,6 +41,11 @@ const TableBase = ({ children, sort, onSortByName, onSortByPrice }) => {
 			<tbody>{children}</tbody>
 		</table>
 	)
+}
+
+TableBase.propTypes = {
+	productsProp: PropTypes.array,
+	openModal: PropTypes.func,
 }
 
 export default React.memo(TableBase)

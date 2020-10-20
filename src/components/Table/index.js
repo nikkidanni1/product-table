@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useCallback } from 'react'
+import PropTypes from 'prop-types'
 
 import TableBase from './components/TableBase'
-import Tr from './components/Tr'
+import TableRow from './components/TableRow'
 
 import { sortByFields } from './utils'
 
@@ -58,10 +59,15 @@ const Table = ({ productsProp = [], openModal }) => {
 	return (
 		<TableBase sort={sort} onSortByName={onSortByName} onSortByPrice={onSortByPrice}>
 			{products.map((item) => {
-				return <Tr key={item.id} product={item} onView={onView} onEdit={onEdit} onDelete={onDelete} />
+				return <TableRow key={item.id} product={item} onView={onView} onEdit={onEdit} onDelete={onDelete} />
 			})}
 		</TableBase>
 	)
+}
+
+Table.propTypes = {
+	productsProp: PropTypes.array,
+	openModal: PropTypes.func,
 }
 
 export default React.memo(Table)

@@ -1,6 +1,12 @@
-import React from 'react'
+import React, { useCallback } from 'react'
+import { deleteProduct } from 'store/products/actions'
 
-const DeleteForm = ({ close, onDelete }) => {
+const DeleteForm = ({ close, dispatch, product }) => {
+    const onDelete = useCallback(() => {
+		dispatch(deleteProduct(product.id))
+		close()
+    }, [product])
+
     return (
         <>
             <header className='modalBox__header'>

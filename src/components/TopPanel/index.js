@@ -1,4 +1,5 @@
 import React, { useCallback, useState } from 'react'
+import PropTypes from 'prop-types'
 import './style.scss'
 
 const TopPanel = ({ search, openModal }) => {
@@ -12,9 +13,12 @@ const TopPanel = ({ search, openModal }) => {
 		setText(e.target.value)
 	}, [])
 
-	const onSearch = useCallback((e) => {
-		search(text)
-	}, [text])
+	const onSearch = useCallback(
+		(e) => {
+			search(text)
+		},
+		[text]
+	)
 
 	return (
 		<header className='topPanel'>
@@ -25,6 +29,11 @@ const TopPanel = ({ search, openModal }) => {
 			</button>
 		</header>
 	)
+}
+
+TopPanel.propTypes = {
+	search: PropTypes.func,
+	openModal: PropTypes.func,
 }
 
 export default React.memo(TopPanel)
