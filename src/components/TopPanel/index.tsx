@@ -1,12 +1,21 @@
-import React, { useCallback, useState } from 'react'
-import PropTypes from 'prop-types'
-import './style.scss'
+/* eslint-disable react/prop-types */
+import * as React from "react"
+import { useCallback, useState } from "react"
 
-const TopPanel = ({ search, openModal }) => {
-	const [text, setText] = useState('')
+import { Product } from "models"
+
+import "./style.scss"
+
+type IProps = {
+	search: (text: string) => void,
+	openModal: (type: string, product: Product) => void
+}
+
+const TopPanel: React.FunctionComponent<IProps> = ({ search, openModal }) => {
+	const [text, setText] = useState("")
 
 	const openCreateModal = useCallback(() => {
-		openModal('create', null)
+		openModal("create", null)
 	}, [])
 
 	const onChangeText = useCallback((e) => {
@@ -14,7 +23,7 @@ const TopPanel = ({ search, openModal }) => {
 	}, [])
 
 	const onSearch = useCallback(
-		(e) => {
+		() => {
 			search(text)
 		},
 		[text]
@@ -29,11 +38,6 @@ const TopPanel = ({ search, openModal }) => {
 			</button>
 		</header>
 	)
-}
-
-TopPanel.propTypes = {
-	search: PropTypes.func,
-	openModal: PropTypes.func,
 }
 
 export default React.memo(TopPanel)
