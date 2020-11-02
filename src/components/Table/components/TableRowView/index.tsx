@@ -1,9 +1,19 @@
-import React from 'react'
-import { formatPrice } from 'utils'
+/* eslint-disable react/prop-types */
+import React from "react"
+import { formatPrice } from "utils"
 
-import './style.scss'
+import "./style.scss"
 
-const TableRowView = ({ onView, name, count, price, onEdit, onDelete }) => {
+type IProps = {
+	name: string,
+	count: number,
+	price: number,
+	onView: () => void,
+	onEdit: () => void,
+	onDelete: () => void
+}
+
+const TableRowView: React.FunctionComponent<IProps> = ({ onView, name, count, price, onEdit, onDelete }) => {
 	const formattedPrice = formatPrice(price)
 
 	return (

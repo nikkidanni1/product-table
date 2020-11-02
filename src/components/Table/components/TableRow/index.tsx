@@ -1,7 +1,16 @@
-import React, { useCallback } from 'react'
-import TableRowView from '../TableRowView'
+/* eslint-disable react/prop-types */
+import React, { useCallback } from "react"
+import { Product } from "models"
+import TableRowView from "../TableRowView"
 
-const TableRow = ({ product, onView, onEdit, onDelete }) => {
+type IProps = {
+	product: Product,
+	onView: (product: Product) => void,
+	onEdit: (product: Product) => void,
+	onDelete: (product: Product) => void
+}
+
+const TableRow: React.FunctionComponent<IProps> = ({ product, onView, onEdit, onDelete }) => {
 	const onViewProduct = useCallback(() => {
 		onView(product)
 	}, [product])

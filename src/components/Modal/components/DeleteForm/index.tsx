@@ -1,7 +1,16 @@
-import React, { useCallback } from 'react'
-import { deleteProduct } from 'store/products/actions'
+/* eslint-disable react/prop-types */
+import React, { useCallback } from "react"
+import { Dispatch } from "redux"
+import { Product } from "models"
+import { deleteProduct } from "store/products/actions"
 
-const DeleteForm = ({ close, dispatch, product }) => {
+type IProps = {
+	dispatch: Dispatch<any>,
+    close: () => void,
+    product: Product
+}
+
+const DeleteForm: React.FunctionComponent<IProps> = ({ close, dispatch, product }) => {
     const onDelete = useCallback(() => {
 		dispatch(deleteProduct(product.id))
 		close()

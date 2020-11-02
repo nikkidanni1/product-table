@@ -1,41 +1,50 @@
-import React, { useState, useCallback } from 'react'
-import DeliverySelectBox from './components/DeliverySelectBox'
-import CountryBox from './components/CountryBox'
-import CityBox from './components/CityBox'
+/* eslint-disable react/prop-types */
+import React, { useState, useCallback } from "react"
+import DeliverySelectBox from "./components/DeliverySelectBox"
+import CountryBox from "./components/CountryBox"
+import CityBox from "./components/CityBox"
 
-import './style.scss'
+import "./style.scss"
 
-const deliverySelectList = ['-', 'Country', 'City']
+const deliverySelectList = ["-", "Country", "City"]
 
-const DeliveryBox = ({ onChange, countriesList, citiesList, atteptAccept, defaultValues }) => {
-	const [delivery, setDelivery] = useState(
+type IProps = {
+	onChange: (obj: { country: string, city: any, error: string }) => void,
+	countriesList: Array<string>,
+	citiesList: { [prop: string]: Array<string> },
+	atteptAccept: boolean,
+	defaultValues: { country: string, city: any }
+}
+
+const DeliveryBox: React.FunctionComponent<IProps> = ({ onChange, countriesList, citiesList, atteptAccept, defaultValues }) => {
+	const [delivery, setDelivery] = useState<string>(
 		defaultValues.city.size === 0 ? deliverySelectList[0] : deliverySelectList[1]
 	)
-	const [selectedCountry, setSelectedCountry] = useState(defaultValues.country)
-	const [selectedCity, setSelectedCity] = useState(defaultValues.city)
-	const [error, setError] = useState('')
-	const [isTouchedCities, setTouchedCities] = useState(false)
+	const [selectedCountry, setSelectedCountry] = useState<string>(defaultValues.country)
+	const [selectedCity, setSelectedCity] = useState<any>(defaultValues.city)
+	const [error, setError] = useState<string>("")
+	const [isTouchedCities, setTouchedCities] = useState<boolean>(false)
 
 	const onChangeDelivery = useCallback(
-		(e) => {
+		(e: React.ChangeEvent<HTMLSelectElement>) => {
 			const value = e.target.value
 			let newCountry = selectedCountry
 			let newCity = selectedCity
 			let newError = error
 
 			if (value === deliverySelectList[0]) {
-				newCountry = ''
+				newCountry = ""
 				newCity = new Set()
 			}
 
 			if (
 				value === deliverySelectList[0] ||
-				selectedCountry === '' ||
-				(selectedCountry !== '' && selectedCity.size !== 0)
+				selectedCountry === "" ||
+				(selectedCountry !== "" && selectedCity.size !== 0)
 			) {
-				newError = ''
+				newError = ""
 			} else {
-				newError = 'Check city'
+				newError = "Check city"
 			}
 
 			setDelivery(value)
@@ -49,10 +58,10 @@ const DeliveryBox = ({ onChange, countriesList, citiesList, atteptAccept, defaul
 	)
 
 	const onChangeCountry = useCallback(
-		(e) => {
+		(e: React.ChangeEvent<HTMLInputElement>) => {
 			let newCountry = e.target.value
 			let newCity = new Set()
-			let newError = 'Check city'
+			let newError: string = "Check city"
 
 			setSelectedCountry(newCountry)
 			setSelectedCity(newCity)
@@ -64,17 +73,17 @@ const DeliveryBox = ({ onChange, countriesList, citiesList, atteptAccept, defaul
 	)
 
 	const onChangeAllCities = useCallback(
-		(e) => {
-			const target = e.target
+		(e: React.ChangeEvent<HTMLInputElement>) => {
+			const target: HTMLInputElement = e.target
 			let newCity = selectedCity
-			let newError = error
+			let newError: string = error
 
 			if (target.checked) {
-				newCity = new Set([...citiesList.map((item, index) => index), +target.value])
-				newError = ''
+				newCity = new Set([...citiesList[selectedCountry].map((item, index) => index), +target.value])
+				newError = ""
 			} else {
 				newCity = new Set()
-				newError = 'Check city'
+				newError = "Check city"
 			}
 
 			setSelectedCity(newCity)
@@ -90,11 +99,11 @@ const DeliveryBox = ({ onChange, countriesList, citiesList, atteptAccept, defaul
 	)
 
 	const onChangeCities = useCallback(
-		(e) => {
-			const checked = e.target.checked
-			const index = +e.target.value
+		(e: React.ChangeEvent<HTMLInputElement>) => {
+			const checked: boolean = e.target.checked
+			const index: number = +e.target.value
 			const newCity = new Set([...selectedCity])
-			let newError = error
+			let newError: string = error
 
 			newCity.delete(citiesList[selectedCountry].length)
 			if (checked) {
@@ -104,9 +113,9 @@ const DeliveryBox = ({ onChange, countriesList, citiesList, atteptAccept, defaul
 			}
 
 			if (newCity.size === 0) {
-				newError = 'Check city'
+				newError = "Check city"
 			} else {
-				newError = ''
+				newError = ""
 			}
 
 			setSelectedCity(newCity)

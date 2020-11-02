@@ -12,13 +12,13 @@ type IProps = {
 }
 
 const TopPanel: React.FunctionComponent<IProps> = ({ search, openModal }) => {
-	const [text, setText] = useState("")
+	const [text, setText] = useState<string>("")
 
 	const openCreateModal = useCallback(() => {
 		openModal("create", null)
 	}, [])
 
-	const onChangeText = useCallback((e) => {
+	const onChangeText = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
 		setText(e.target.value)
 	}, [])
 

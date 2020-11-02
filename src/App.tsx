@@ -1,6 +1,7 @@
 import * as React from "react"
 import { useState, useCallback } from "react"
 import { useDispatch, useSelector } from "react-redux"
+import { Dispatch } from "redux"
 
 import { Product, CombinedState } from "models"
 
@@ -17,7 +18,7 @@ const App: React.FunctionComponent<{}> = () => {
 	const [isModalOpen, toggleModal] = useState<boolean>(false)
 	const [selectedProduct, setSelectedProduct] = useState<Product>(null)
 
-	const dispatch = useDispatch()
+	const dispatch: Dispatch<any> = useDispatch()
 
 	const products = useSelector((state: CombinedState) => state.products)
 	const filtredProducts: Array<Product> = products.filter((item: Product) => item.name.includes(searchText))
